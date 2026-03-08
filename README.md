@@ -1,178 +1,306 @@
-# DrinkLion - Development Setup
+# DrinkLion 🦁💧
 
-## Project Structure
+> A smart health reminder app for Indonesians to maintain healthy drinking and eating habits
+
+[![Flutter Version](https://img.shields.io/badge/Flutter-3.41.2-blue)](https://flutter.dev)
+[![Dart Version](https://img.shields.io/badge/Dart-3.11.0-blue)](https://dart.dev)
+[![License](https://img.shields.io/badge/License-MIT-green)](#license)
+[![Android API](https://img.shields.io/badge/Android%20API-35%2B-brightgreen)](https://www.android.com)
+
+## 📱 Overview
+
+DrinkLion is a personalized health reminder application designed for Indonesians. It helps users maintain healthy hydration and meal consumption habits with intelligent, customizable reminders while respecting preferences like quiet hours and fasting periods.
+
+**Key Benefits:**
+- 🔔 Smart reminders for water intake and meals
+- 🕐 Fasting mode support with customizable windows
+- 🔕 Quiet hours to respect sleep schedules
+- 📊 Reminder history and tracking
+- 💾 100% local storage - no cloud required
+
+## ✨ Features
+
+### Core Reminders
+- **Smart Water Reminders** - Customizable frequency with smart scheduling
+- **Meal Reminders** - Set for breakfast, lunch, dinner, snacks
+- **Flexible Scheduling** - Create unique reminder patterns per day
+- **Quiet Hours** - Auto-pause notifications during sleep (9pm-8am default)
+- **Fasting Mode** - Special handling for intermittent fasting practitioners
+
+### User Management
+- **Multiple Profiles** - Support for family/shared device usage
+- **Custom Settings** - Per-user notification preferences
+- **Health Goals** - Track personal health targets
+- **Preference Control** - Detailed notification behavior customization
+
+### Tracking & Analytics
+- **Reminder History** - View all completed & missed reminders
+- **Statistics** - Track hydration and meal habit trends
+- **Activity Log** - Timestamped reminder events
+
+### Technical
+- 🔊 Sound & Vibration customization
+- 🌍 Timezone support for accurate scheduling
+- 📲 Local notifications (no server required)
+- 🎨 Material Design 3 UI
+
+## 🏗️ Architecture
+
+Clean Architecture with Clear Separation of Concerns:
+
+```
+lib/
+├── core/                    # Shared utilities & configuration
+│   ├── config/             # App enums & constants
+│   ├── services/           # Singletons (notifications, user context)
+│   ├── theme/              # Material Design 3 theming
+│   └── utils/              # Logger & helpers
+│
+├── data/                    # Data layer - Local storage & repositories
+│   ├── database/           # SQLite configuration
+│   ├── datasources/        # Data access implementation
+│   ├── models/             # Data models with JSON serialization
+│   └── repositories/       # Repository implementations
+│
+├── domain/                  # Business logic layer
+│   ├── entities/           # Domain models
+│   └── repositories/       # Repository interfaces (contracts)
+│
+└── presentation/            # UI layer
+    ├── bloc/               # BLoC state management (per feature)
+    └── screens/            # Screens & widgets
+```
+
+### State Management: BLoC Pattern
+
+Each feature uses dedicated BLoC:
+- **UserProfileBloc** - User & onboarding
+- **ReminderBloc** - Reminder operations
+- **NotificationBloc** - Notification handling
+- **SettingsBloc** - User preferences
+- **FastingBloc** - Fasting mode logic
+- **HistoryBloc** - History & analytics
+
+## 📋 Tech Stack
+
+| Category | Technology | Version |
+|----------|-----------|---------|
+| Framework | Flutter | 3.41.2 |
+| Language | Dart | 3.11.0 |
+| State Mgmt | flutter_bloc | 8.1.6 |
+| Database | sqflite | 2.4.2 |
+| Notifications | flutter_local_notifications | 17.2.4 |
+| Background Tasks | workmanager | 0.9.0 |
+| DI/Service Locator | get_it | 7.7.0 |
+| Logging | logger | 2.1.0 |
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Flutter** 3.41.2+
+- **Dart** 3.11.0+
+- **Android SDK** API 35+
+- **Xcode** 14+ (for iOS)
+
+### Installation
+
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/presley03/drinklion.git
+   cd drinklion
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Generate Code** (if needed)
+   ```bash
+   flutter pub run build_runner build
+   ```
+
+4. **Run App**
+   ```bash
+   # Android emulator
+   flutter emulators --launch Pixel_4a
+   flutter run -d emulator-5554
+   
+   # Or connected device
+   flutter run
+   ```
+
+### Build Commands
+
+```bash
+# Clean build
+flutter clean
+flutter pub get
+
+# Format code
+dart format lib/
+
+# Analyze
+flutter analyze
+
+# Release build
+flutter build apk --release
+flutter build appbundle --release
+```
+
+## 📦 Project Structure
 
 ```
 drinklion/
-├── lib/
-│   ├── main.dart                          # App entry point
-│   ├── presentation/
-│   │   ├── screens/                       # UI Screens
-│   │   ├── blocs/                         # BLoC state management
-│   │   └── widgets/                       # Reusable widgets
-│   ├── domain/
-│   │   ├── entities/                      # Domain models
-│   │   └── repositories/                  # Abstract repository interfaces
-│   ├── data/
-│   │   ├── datasources/                   # Local/remote data access
-│   │   ├── models/                        # Data models (with serialization)
-│   │   └── database/                      # SQLite database setup
-│   └── core/
-│       ├── theme/                         # Material 3 theme
-│       ├── config/                        # App configuration
-│       ├── services/                      # Global services (service locator, notifications)
-│       └── utils/                         # Utilities (logger, extensions)
-├── test/
-│   ├── domain/                            # Domain layer tests
-│   └── data/                              # Data layer tests
-├── assets/
-│   ├── images/                            # App images
-│   └── icons/                             # App icons
-├── pubspec.yaml                           # Dependencies
-└── analysis_options.yaml                  # Lint rules
+├── lib/                    # Source code (described above)
+├── android/                # Android native integration
+├── ios/                    # iOS native integration
+├── assets/                 # Images, icons, sounds
+├── test/                   # Unit tests
+├── pubspec.yaml           # Dependencies & metadata
+├── analysis_options.yaml  # Lint rules
+├── README.md              # This file
+├── CHANGELOG.md           # Version history
+├── LICENSE                # MIT License
+├── PRIVACY_POLICY.md      # Privacy & data handling
+├── TERMS_OF_SERVICE.md    # Terms of use
+├── CODE_OF_CONDUCT.md     # Community guidelines
+├── CONTRIBUTING.md        # Contribution guide
+└── ARCHITECTURE.md        # Detailed architecture
 ```
 
-## Getting Started
+## 🗄️ Database
 
-### 1. Setup Flutter
-```bash
-flutter --version
-flutter doctor
-```
+### Tables
 
-### 2. Install Dependencies
-```bash
-cd drinklion
-flutter pub get
-```
+**users**
+- id, name, age, gender, health_goals, is_active, created_at, updated_at
 
-### 3. Generate Code (mocks, serializers)
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
+**user_settings**  
+- id, user_id, quiet_hours_enabled, quiet_start, quiet_end, fasting_enabled, fasting_start, fasting_end
 
-### 4. Run App
-```bash
-flutter run
-```
+**notification_schedules**
+- id, user_id, type (WATER/MEAL), frequency_minutes, next_reminder_time
 
-### 5. Run Tests
-```bash
-flutter test
-flutter test --coverage
-```
+**reminder_logs**
+- id, user_id, reminder_type, is_completed, log_date, log_time
 
-## Architecture Guidelines
+## 🎯 Use Cases
 
-### Clean Architecture Layers
+### Daily Hydration
+1. User sets water reminder every 2 hours
+2. Receives notifications at 9am, 11am, 1pm, 3pm, 5pm
+3. Can log completed reminders
+4. Views history anytime
 
-1. **Presentation Layer** (UI)
-   - Screens, Widgets, BLoCs
-   - Handles user interaction
-   - Emits events, listens to states
+### Intermittent Fasting
+1. Enable fasting mode (14h-6h)
+2. Meal reminders auto-pause during fasting
+3. Water reminders continue (customizable)
+4. Fasting window displayed on home
 
-2. **Domain Layer** (Business Logic)
-   - Entities (domain models)
-   - Repository interfaces (abstract)
-   - Use cases (future)
+### Quiet Sleep Hours
+1. Set quiet hours 9pm-6am
+2. All notifications paused during this time
+3. If reminder scheduled during quiet hours, deferred to after
+4. Can override manually if needed
 
-3. **Data Layer** (Data Access)
-   - Models (with serialization)
-   - Data sources (local, remote)
-   - Repository implementations
+## 🏃 Development
 
-4. **Core Layer** (Shared)
-   - Theme, config, services, utilities
-   - Used across all layers
+### Add New Feature
 
-### Dependency Flow
-
-```
-Presentation → Domain ← Data
-       ↓
-      Core (utilities, config, theme)
-```
-
-**Rule:** Never import upward (data → domain, etc.)
-
-## Development Workflow
-
-### When adding a new feature:
-
-1. **Define Domain Layer**
+1. **Domain Layer**
    - Create entity in `domain/entities/`
-   - Create repository interface in `domain/repositories/`
+   - Create repository interface
 
-2. **Implement Data Layer**
+2. **Data Layer**
    - Create model in `data/models/`
-   - Implement repository in `data/repositories/`
-   - Add database operations in `data/datasources/`
+   - Implement repository 
+   - Add DB operations in `data/datasources/`
 
-3. **Create Presentation Layer**
-   - Create BLoC in `presentation/blocs/`
-   - Create screen in `presentation/screens/`
-   - Create widgets in `presentation/widgets/`
+3. **Presentation Layer**
+   - Create BLoC with events & states
+   - Create screen/widgets
+   - Wire up with service locator
 
 4. **Test**
-   - Unit tests in `test/domain/` and `test/data/`
-   - Widget tests in `test/presentation/`
+   - Add unit tests in `test/`
+   - Add widget tests if UI heavy
 
-### Example: Implement User Profile Feature
+### Code Style
 
-```
-1. Domain:
-   - domain/entities/entities.dart (UserProfile)
-   - domain/repositories/repositories.dart (UserRepository)
-
-2. Data:
-   - data/models/user_model.dart
-   - data/datasources/local_data_source.dart (CRUD)
-   - data/repositories/user_repository_impl.dart
-
-3. Presentation:
-   - presentation/blocs/user_profile/user_profile_bloc.dart
-   - presentation/blocs/user_profile/user_profile_event.dart
-   - presentation/blocs/user_profile/user_profile_state.dart
-   - presentation/screens/onboarding_screen.dart
-
-4. Tests:
-   - test/domain/services/schedule_service_test.dart
-   - test/data/repositories/user_repository_impl_test.dart
-```
-
-## Code Style
-
-- Use `final` for variables that won't change
+- Use `final` for immutable variables
 - Use `const` for compile-time constants
-- Follow Flutter naming conventions
-- Extract widgets into separate files when >100 lines
+- Follow Flutter conventions
+- Extract widgets >100 lines to separate files
+- Add doc comments for public APIs
 - Use meaningful variable names
-- Add documentation comments for public APIs
 
-## Next Steps
+## 🔒 Privacy & Security
 
-1. **Database Models** - Create data models mirroring SQLite schema
-2. **Repository Implementations** - Implement repository methods
-3. **BLoCs** - Create state management for each feature
-4. **Screens** - Build UI screens
-5. **Testing** - Write unit & widget tests
-6. **Polish** - Dark mode, accessibility, i18n
+- ✅ **No analytics tracking** - We don't track you
+- ✅ **Local only** - All data on your device
+- ✅ **Offline** - Works without internet
+- ✅ **No account** - No login required
 
-## Important Files Locations
+See [PRIVACY_POLICY.md](PRIVACY_POLICY.md) for details.
 
-- **Theme**: [lib/core/theme/app_theme.dart](lib/core/theme/app_theme.dart)
-- **Config**: [lib/core/config/](lib/core/config/)
-- **Database**: [lib/data/database/app_database.dart](lib/data/database/app_database.dart)
-- **Entities**: [lib/domain/entities/entities.dart](lib/domain/entities/entities.dart)
+## 📄 License
 
-## Documentation References
+MIT License - see [LICENSE](LICENSE) file
 
-- Technical Architecture: `TECHNICAL_ARCHITECTURE_SPEC.md`
-- Database Design: `DATABASE_DESIGN_SPEC.md`
-- UI/UX Wireframes: `UI_UX_WIREFRAME_SPEC.md`
-- Testing Strategy: `TEST_STRATEGY_QA_PLAN.md`
-- PRD: `PRD_DrinkLion.md`
+**You can:** ✅ Use commercially, Modify, Distribute, Use privately  
+**You must:** 📋 Include license notice, Document changes  
+**You cannot:** ❌ Hold liable authors, Claim original authorship
 
----
+## 🤝 Contributing
 
-**Happy Coding! 🚀**
+See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+- How to submit PRs
+- Code style guidelines
+- Development setup
+- Testing requirements
+
+## 📞 Support
+
+- **Issues** - Report bugs via GitHub Issues
+- **Discussions** - Ask questions in Discussions
+- **Security** - Email security concerns (never public issues)
+
+## 🗺️ Roadmap
+
+### v1.0 (Current) ✅
+- ✅ Core reminder functionality
+- ✅ Fasting mode
+- ✅ Quiet hours
+- ✅ Reminder history
+- ✅ User profiles
+
+### v1.1 (Planned)
+- 📋 Social features
+- 📋 Advanced analytics
+- 📋 Custom sounds
+- 📋 Family management
+
+### v2.0 (Future)
+- 📋 Wearable integration
+- 📋 Cloud sync option
+- 📋 AI personalization
+- 📋 Multi-language
+
+## 📚 Documentation
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture & patterns
+- [CONTRIBUTING.md](CONTRIBUTING.md) - How to contribute
+- [CHANGELOG.md](CHANGELOG.md) - Version history
+- [PRIVACY_POLICY.md](PRIVACY_POLICY.md) - Privacy & data
+- [TERMS_OF_SERVICE.md](TERMS_OF_SERVICE.md) - Terms of use
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) - Community guidelines
+
+## ❤️ Made with Love
+
+Built by Presley for Indonesian health enthusiasts  
+Using Flutter, Dart, and Clean Architecture  
+
+**Last Updated:** March 2026  
+**Version:** 1.0.0
