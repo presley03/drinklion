@@ -6,6 +6,7 @@ import 'package:drinklion/data/repositories/repositories.dart';
 import 'package:drinklion/domain/repositories/repositories.dart';
 import 'package:drinklion/core/services/user_context_service.dart';
 import 'package:drinklion/core/services/notification_manager.dart';
+import 'package:drinklion/core/utils/logger.dart';
 import 'package:drinklion/presentation/bloc/user_profile/user_profile_bloc.dart';
 import 'package:drinklion/presentation/bloc/reminder/reminder_bloc.dart';
 import 'package:drinklion/presentation/bloc/history/history_bloc.dart';
@@ -24,15 +25,49 @@ Future<void> setupServiceLocator() async {
   final notificationManager = NotificationManager();
   NotificationManager.initializeTimezoneData(); // Initialize timezone data
   getIt.registerSingleton<NotificationManager>(notificationManager);
-  await notificationManager.initialize();
+
+  // Initialize notifications with timeout - skip workmanager on startup
+  try {
+    await notificationManager.initialize().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        logger.w(
+          'NotificationManager initialization timeout - continuing without workmanager',
+        );
+      },
+    );
+  } catch (e) {
+    logger.e('Error initializing notifications', error: e);
+    // Continue anyway - notifications can work without workmanager
+  }
 
   // Database
   final appDatabase = AppDatabase();
-  await appDatabase.getDatabase(); // Initialize database
+  try {
+    await appDatabase.getDatabase().timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        throw Exception('Database initialization timeout');
+      },
+    );
+  } catch (e) {
+    logger.e('Error initializing database', error: e);
+    rethrow;
+  }
 
   // Data sources
   final localDataSource = LocalDataSourceImpl(appDatabase);
-  await localDataSource.initialize(); // Initialize data source
+  try {
+    await localDataSource.initialize().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        throw Exception('Data source initialization timeout');
+      },
+    );
+  } catch (e) {
+    logger.e('Error initializing data source', error: e);
+    rethrow;
+  }
   getIt.registerSingleton<LocalDataSource>(localDataSource);
 
   // Repositories
@@ -77,6 +112,8 @@ Future<void> setupServiceLocator() async {
       getIt<NotificationManager>(),
     ),
   );
+
+  logger.i('Service locator setup completed successfully');
 }
 
 /// Dispose all resources

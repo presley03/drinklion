@@ -25,7 +25,7 @@ android {
         applicationId = "com.drinklion.drinklion"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 35  // Updated to support Google Play Store requirements
+        minSdk = 34  // Development: 34, Production/Play Store: 35
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
