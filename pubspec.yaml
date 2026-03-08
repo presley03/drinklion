@@ -1,8 +1,18 @@
 name: drinklion
-description: A simple health reminder app for Indonesians to drink water and eat healthy meals.
+description: >
+  DrinkLion - A smart health reminder app for Indonesians. Stay hydrated with 
+  intelligent water and meal reminders. Features customizable schedules, fasting 
+  mode support, quiet hours, and reminder history tracking. All data stored locally 
+  - no cloud, no tracking, 100% privacy.
+
 publish_to: 'none'
 
 version: 1.0.0+1
+
+homepage: https://github.com/presley03/drinklion
+repository: https://github.com/presley03/drinklion
+issue_tracker: https://github.com/presley03/drinklion/issues
+documentation: https://github.com/presley03/drinklion
 
 environment:
   sdk: '>=3.8.0 <4.0.0'
